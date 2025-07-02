@@ -135,9 +135,9 @@ public class UserServiceImpl implements UserService {
         User existingUser = getCurrentLoggedInUser();
 
         if(userDto.getEmail() != null) existingUser.setEmail(userDto.getEmail());
-        if(userDto.getFirstName() != null) existingUser.setEmail(userDto.getFirstName());
-        if(userDto.getLastName() != null) existingUser.setEmail(userDto.getLastName());
-        if(userDto.getPhoneNumber() != null) existingUser.setEmail(userDto.getPhoneNumber());
+        if(userDto.getFirstName() != null) existingUser.setFirstName(userDto.getFirstName());
+        if(userDto.getLastName() != null) existingUser.setLastName(userDto.getLastName());
+        if(userDto.getPhoneNumber() != null) existingUser.setPhoneNumber(userDto.getPhoneNumber());
 
         if(userDto.getPassword() != null && !userDto.getPassword().isEmpty()) {
             existingUser.setPassword(passwordEncoder.encode(userDto.getPassword()));
