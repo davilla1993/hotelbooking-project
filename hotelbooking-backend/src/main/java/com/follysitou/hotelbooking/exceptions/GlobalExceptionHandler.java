@@ -59,4 +59,14 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(TokenExpiredException.class)
+    public ResponseEntity<Response> handleExpiredJwtException(TokenExpiredException ex) {
+        Response response = Response.builder()
+                .status(HttpStatus.UNAUTHORIZED.value())
+                .message(ex.getMessage())
+                .build();
+
+        return new ResponseEntity<Response>(response, HttpStatus.UNAUTHORIZED);
+    }
+
 }

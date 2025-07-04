@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -33,7 +32,7 @@ public class RoomServiceImpl implements RoomService {
     private final RoomRepository roomRepository;
     private final ModelMapper modelMapper;
 
-    private final static String IMAGE_DIRECTORY = System.getProperty("user.id") + "/rooms-image";
+    private final static String IMAGE_DIRECTORY = System.getProperty("user.dir") + "/uploads/";
 
     @Override
     public Response addRoom(RoomDto roomDto, MultipartFile imageFile) {
@@ -135,17 +134,17 @@ public class RoomServiceImpl implements RoomService {
 
         // Validation: Ensure check In Date is not before today
         if(checkInDate.isBefore(LocalDate.now())) {
-            throw new InvalidBookingStateAndDateException("CheckInDate must be before today");
+            throw new InvalidBookingStateAndDateException("Check in date cannot be before today");
         }
 
         // Validation: Ensure check Out Date is not before check In Date
         if(checkOutDate.isBefore(checkInDate)) {
-            throw new InvalidBookingStateAndDateException("CheckOutDate must be before checkInDate");
+            throw new InvalidBookingStateAndDateException("Check Out date must be before check in date");
         }
 
         // Validation: Ensure check In Date is not same as check Out Date
-        if(checkInDate.isEqual(checkInDate)) {
-            throw new InvalidBookingStateAndDateException("CheckInDate cannot be equal checkOutDate");
+        if(checkInDate.isEqual(checkOutDate)) {
+            throw new InvalidBookingStateAndDateException("Check In date cannot be equal to check Out date");
         }
 
         List<Room> roomList = roomRepository.findAvailableRooms(checkInDate, checkOutDate, roomType);
