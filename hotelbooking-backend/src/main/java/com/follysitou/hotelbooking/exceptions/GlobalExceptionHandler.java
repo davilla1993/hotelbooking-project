@@ -69,4 +69,14 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<Response>(response, HttpStatus.UNAUTHORIZED);
     }
 
+    @ExceptionHandler(EntityAlreadyExistsException.class)
+    public ResponseEntity<Response> handleEntityAlreadyExistsException(EntityAlreadyExistsException ex) {
+        Response response = Response.builder()
+                .status(HttpStatus.CONFLICT.value())
+                .message(ex.getMessage())
+                .build();
+
+        return new ResponseEntity<Response>(response, HttpStatus.CONFLICT);
+    }
+
 }

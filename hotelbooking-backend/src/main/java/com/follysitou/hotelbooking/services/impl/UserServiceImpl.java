@@ -4,6 +4,7 @@ import com.follysitou.hotelbooking.dtos.*;
 import com.follysitou.hotelbooking.entities.Booking;
 import com.follysitou.hotelbooking.entities.User;
 import com.follysitou.hotelbooking.enums.UserRole;
+import com.follysitou.hotelbooking.exceptions.EntityAlreadyExistsException;
 import com.follysitou.hotelbooking.exceptions.InvalidCredentialException;
 import com.follysitou.hotelbooking.exceptions.NotFoundException;
 import com.follysitou.hotelbooking.repositories.BookingRepository;
@@ -38,6 +39,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Response registerUser(RegistrationRequest registrationRequest) {
+
+        User user = userRepository.findByEmail(registrationRequest.getEmail())
+                .orElseThrow(() -> new EntityAlreadyExistsException("A user with this email already exists !"));
 
         UserRole role = UserRole.CUSTOMER;
 
