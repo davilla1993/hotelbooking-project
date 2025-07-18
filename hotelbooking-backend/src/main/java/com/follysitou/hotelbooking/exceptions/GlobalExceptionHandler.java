@@ -1,6 +1,7 @@
 package com.follysitou.hotelbooking.exceptions;
 
 import com.follysitou.hotelbooking.dtos.Response;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -71,6 +72,16 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(EntityAlreadyExistsException.class)
     public ResponseEntity<Response> handleEntityAlreadyExistsException(EntityAlreadyExistsException ex) {
+        Response response = Response.builder()
+                .status(HttpStatus.CONFLICT.value())
+                .message(ex.getMessage())
+                .build();
+
+        return new ResponseEntity<Response>(response, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<Response> handleEntityAlreadyExistsException(DataIntegrityViolationException ex) {
         Response response = Response.builder()
                 .status(HttpStatus.CONFLICT.value())
                 .message(ex.getMessage())

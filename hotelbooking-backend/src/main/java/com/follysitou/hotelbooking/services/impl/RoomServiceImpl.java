@@ -32,14 +32,18 @@ public class RoomServiceImpl implements RoomService {
     private final RoomRepository roomRepository;
     private final ModelMapper modelMapper;
 
-    private final static String IMAGE_DIRECTORY = System.getProperty("user.dir") + "/uploads/";
+    // private final static String IMAGE_DIRECTORY = System.getProperty("user.dir") + "/uploads/";
+
+    private final static String IMAGE_DIRECTORY_FRONTEND = "D:/Fullstack-projects/hotelbooking-project/hotelbooking-frontend/public/rooms/";
+
 
     @Override
     public Response addRoom(RoomDto roomDto, MultipartFile imageFile) {
 
         Room roomToSave = modelMapper.map(roomDto, Room.class);
         if(imageFile != null) {
-            String imagePath = saveImage(imageFile);
+       //     String imagePath = saveImage(imageFile);
+            String imagePath = saveImageToFrontend(imageFile);
             roomToSave.setImageUrl(imagePath);
         }
         roomRepository.save(roomToSave);
@@ -56,7 +60,8 @@ public class RoomServiceImpl implements RoomService {
                 .orElseThrow(() -> new NotFoundException("Room does not exists"));
 
         if(imageFile != null && !imageFile.isEmpty()) {
-            String imagePath = saveImage(imageFile);
+          //  String imagePath = saveImage(imageFile);
+            String imagePath = saveImageToFrontend(imageFile);
             existingRoom.setImageUrl(imagePath);
         }
 
@@ -175,7 +180,7 @@ public class RoomServiceImpl implements RoomService {
                 .build();
     }
 
-    private String saveImage(MultipartFile imageFile) {
+    /*private String saveImage(MultipartFile imageFile) {
         if(!Objects.requireNonNull(imageFile.getContentType()).startsWith("image/")){
             throw new IllegalArgumentException("Only image file is allowed");
         }
@@ -197,5 +202,29 @@ public class RoomServiceImpl implements RoomService {
             throw new RuntimeException(ex.getMessage());
         }
             return imagePath;
+    }*/
+
+    private String saveImageToFrontend(MultipartFile imageFile) {
+        if(!Objects.requireNonNull(imageFile.getContentType()).startsWith("image/")){
+            throw new IllegalArgumentException("Only image file is allowed");
+        }
+        // create directory if it don't exist
+        File directory = new File(IMAGE_DIRECTORY_FRONTEND);
+
+        if(!directory.exists()) {
+            directory.mkdir();
+        }
+
+        // Generate unique file name for the image
+        String uniqueFileName = UUID.randomUUID() + "_" + imageFile.getOriginalFilename();
+        String imagePath = IMAGE_DIRECTORY_FRONTEND + uniqueFileName;
+
+        try {
+            File destinationFile = new File(imagePath);
+            imageFile.transferTo(destinationFile);
+        } catch (Exception ex) {
+            throw new RuntimeException(ex.getMessage());
+        }
+        return "/rooms/"+uniqueFileName;
     }
 }

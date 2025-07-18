@@ -40,8 +40,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public Response registerUser(RegistrationRequest registrationRequest) {
 
-        User user = userRepository.findByEmail(registrationRequest.getEmail())
-                .orElseThrow(() -> new EntityAlreadyExistsException("A user with this email already exists !"));
+        if (userRepository.findByEmail(registrationRequest.getEmail()).isPresent()) {
+            throw new EntityAlreadyExistsException("A user with this email already exists !");
+        }
 
         UserRole role = UserRole.CUSTOMER;
 
@@ -138,7 +139,7 @@ public class UserServiceImpl implements UserService {
         log.info("INSIDE updateOwnAccount()");
         User existingUser = getCurrentLoggedInUser();
 
-        if(userDto.getEmail() != null) existingUser.setEmail(userDto.getEmail());
+      //  if(userDto.getEmail() != null) existingUser.setEmail(userDto.getEmail());
         if(userDto.getFirstName() != null) existingUser.setFirstName(userDto.getFirstName());
         if(userDto.getLastName() != null) existingUser.setLastName(userDto.getLastName());
         if(userDto.getPhoneNumber() != null) existingUser.setPhoneNumber(userDto.getPhoneNumber());
