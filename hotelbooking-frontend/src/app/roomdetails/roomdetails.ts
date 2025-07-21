@@ -68,7 +68,7 @@ export class Roomdetails {
     }
 
     const oneDay = 24 * 60 * 60 * 1000; //milisec
-    const totalDays = Math.round(Math.abs((checkOut.getTime() - checkIn.getTime()) / oneDay)); //differenc in days
+    const totalDays = Math.round(Math.abs((checkOut.getTime() - checkIn.getTime()) / oneDay)); //difference in days
 
     this.totalDaysToStay = totalDays;
 

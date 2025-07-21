@@ -110,14 +110,14 @@ public class BookingServiceImpl implements BookingService {
 
         bookingRepository.save(booking);
 
-        String paymentLink = this.paymentLink + bookingReference.toLowerCase() + "/" + totalPrice;
+        String paymentLink = this.paymentLink + bookingReference + "/" + totalPrice;
         log.info("BOOKING SUCCESSFULLY PAYMENT LINK IS {} ", paymentLink);
 
         // Send email to user via mail
         NotificationDto notificationDto = NotificationDto.builder()
                 .recipient(currentUser.getEmail())
                 .subject("BOOKING CONFIRMATION")
-                .body(String.format("Your booking has been created successfully. \n Please, proceed with your payment using" +
+                .body(String.format("Your booking has been created successfully. \n Please, proceed with your payment using " +
                         "payment link below \n%s", paymentLink))
                 .bookingReference(bookingReference)
                 .build();
